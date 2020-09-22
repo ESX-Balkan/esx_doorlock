@@ -12,7 +12,6 @@ Citizen.CreateThread(function()
 
 	ESX.PlayerData = ESX.GetPlayerData()
 
-	-- Update the door list
 	ESX.TriggerServerCallback('esx_doorlock:getDoorState', function(doorState)
 		for index,state in pairs(doorState) do
 			Config.DoorList[index].locked = state
@@ -22,13 +21,13 @@ end)
 
 RegisterNetEvent('esx:setJob')
 AddEventHandler('esx:setJob', function(job) ESX.PlayerData.job = job end)
-
 RegisterNetEvent('esx_doorlock:setDoorState')
 AddEventHandler('esx_doorlock:setDoorState', function(index, state) Config.DoorList[index].locked = state end)
 
 Citizen.CreateThread(function()
 	while true do
-		local playerCoords = GetEntityCoords(PlayerPedId())
+		local ped = PlayerPedId()
+		local playerCoords = GetEntityCoords(ped)
 
 		for k,v in ipairs(Config.DoorList) do
 			v.isAuthorized = isAuthorized(v)
@@ -72,7 +71,7 @@ Citizen.CreateThread(function()
 		local letSleep = true
 
 		for k,v in ipairs(Config.DoorList) do
-			if v.distanceToPlayer and v.distanceToPlayer < 50 then
+			if v.distanceToPlayer and v.distanceToPlayer < 20 then
 				letSleep = false
 
 				if v.doors then
